@@ -63,9 +63,51 @@ b.  git add <file-with-conflict>
 c.  git commit
 d. git push origin main
 
+##############################################################################################################################################################################################################################
+
+You can list the active account name with this command:
+gcloud auth list
+
+You can list the project ID with this command:
+gcloud config list project
+
+From Cloud Shell, enable the Cloud Run API :
+gcloud services enable run.googleapis.com
+
+Set the compute region:
+gcloud config set compute/region us-central1
+
+Create a LOCATION environment variable:
+LOCATION="us-central1"
+
+Now, build your container image using Cloud Build by running the following command from the directory containing the Dockerfile. (Note the $GOOGLE_CLOUD_PROJECT environmental variable in the command, which contains your lab's Project ID):
+
+gcloud builds submit --tag gcr.io/$GOOGLE_CLOUD_PROJECT/helloworld
+
+List all the container images associated with your current project using this command:
+gcloud container images list
+
+Register gcloud as the credential helper for all Google-supported Docker registries:
+gcloud auth configure-docker
+
+To run and test the application locally from Cloud Shell, start it using this standard docker command:
+
+docker run -d -p 8080:8080 gcr.io/$GOOGLE_CLOUD_PROJECT/helloworld
+
+###Task 4. Deploy to Cloud Run
+
+Deploying your containerized application to Cloud Run is done using the following command adding your Project-ID:
+gcloud run deploy --image gcr.io/$GOOGLE_CLOUD_PROJECT/helloworld --allow-unauthenticated --region=$LOCATION
 
 
+###Task 5. Clean up
 
+You can either decide to delete your Google Cloud project to avoid incurring charges, which will stop billing for all the resources used within that project, or simply delete your helloworld image using this command :
+
+gcloud container images delete gcr.io/$GOOGLE_CLOUD_PROJECT/helloworld
+
+To delete the Cloud Run service, use this command :
+gcloud run services delete helloworld --region=us-central1
 
 
 
