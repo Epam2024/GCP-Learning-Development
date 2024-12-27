@@ -1,0 +1,93 @@
+This is a project of Google Cloud VPC-Network-Peering illsutrates as two Projects Project A & Project B . They will establish the network Architecture & later on peered the connection by veryfing the VM Instances deploy on two seeprate projects .
+
+
+A. You can list the active account name with this command:
+gcloud auth list
+
+B   You can list the project ID with this command:
+gcloud config list project
+
+C. In the Cloud Shell for project-A, set the project ID for the project-A:
+gcloud config set project qwiklabs-gcp-02-d78741261075
+
+D.  In the Cloud Shell for project-B, set the project ID for the project-B:
+gcloud config set project Project ID 2
+
+ProjectA :-
+E. Go back to first Cloud Shell and run the following to create a custom network:
+ gcloud compute networks create network-a --subnet-mode custom
+
+F. Create a subnet within this VPC and specify a region and IP range by running:
+gcloud compute networks subnets create network-a-subnet --network network-a \
+    --range 10.0.0.0/16 --region "REGION 1"
+
+G. Create a VM instance:
+gcloud compute instances create vm-a --zone "ZONE 1" --network network-a --subnet network-a-subnet --machine-type e2-small
+
+H. Run the following to enable SSH and icmp, because you'll need a secure shell to communicate with VMs during connectivity testing:
+gcloud compute firewall-rules create network-a-fw --network network-a --allow tcp:22,icmp
+
+Project:-B
+A. Switch to the second Cloud Shell and create a custom network:
+gcloud compute networks create network-b --subnet-mode custom
+
+B. Create a subnet within this VPC and specify a region and IP range by running:
+gcloud compute networks subnets create network-b-subnet --network network-b \
+    --range 10.8.0.0/16 --region "REGION 2"
+
+C. Create a VM instance:
+gcloud compute instances create vm-b --zone "ZONE 2" --network network-b --subnet network-b-subnet --machine-type e2-small
+
+D. Run the following to enable SSH and icmp, because you'll need a secure shell to communicate with VMs during connectivity testing:
+gcloud compute firewall-rules create network-b-fw --network network-b --allow tcp:22,icmp
+
+ Set up a VPC network peering session
+project-A
+
+1.Go to the VPC Network Peering in the Cloud Console by navigating to the Networking section and clicking VPC Network > VPC network peering in the left menu. Once you're there:
+
+2.Click Create connection.
+3. Click Continue.
+4. Type "peer-ab" as the Name for this side of the connection.
+5. Under Your VPC network, select the network you want to peer (network-a).
+6. Set the Peered VPC network radio buttons to In another project.
+7. Paste in the Project ID of the second project.
+8. Type in the VPC network name of the other network (network-b).
+9. Click Create.
+
+Project:-B
+
+project-B
+
+1.Click Create connection.
+2. Click Continue.
+3. Type "peer-ba" as the Name for this side of the connection.
+4. Under Your VPC network, select the network you want to peer (network-b).
+5. Set the Peering VPC network radio buttons to In another project, unless you wish to peer within the same project.
+6. Specify the Project ID of the first project.
+7. Specify VPC network name of the other network (network-a).
+8. Click Create.
+
+gcloud compute routes list --project 
+
+project-A
+Navigate to VM instances console by clicking Navigation Menu > Compute Engine > VM instances.
+
+Copy the INTERNAL_IP for vm-a.
+
+
+project-B
+Click Navigation Menu > Compute Engine > VM instances.
+SSH into vm-b instance.
+
+In the SSH shell of vm-b, run the following command replacing <INTERNAL_IP_OF_VM_A> with the vm-a instance INTERNAL_IP:
+
+Now expirement with the below command as follows :-
+
+ping -c 5 <INTERNAL_IP_OF_VM_A>
+
+
+
+
+
+
